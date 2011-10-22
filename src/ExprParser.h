@@ -10,27 +10,38 @@
 
 class ANode;
 
+	class Operand;
+	class AExprBuilder;
+
 const int MAX_TERM_STR_LEN = 1024;
+
 class CExprParser
 {
 	char* pCurrentPosition;
 	char bufer[MAX_TERM_STR_LEN +1];
 	token_value currentToken;
 
-	ANode* treeHead;
+	/*ANode* treeHead;*/
+	Operand* treeHead;
+	AExprBuilder* theBuilder;
+
 
 protected:
 	virtual token_value GetToken(char*& fromSymbol, char* pBufer);
 	inline token_value GetToken()
 			{return GetToken(pCurrentPosition, bufer);}
 
-	ANode* expr();
-	ANode* term();
-	ANode* prim();
+	Operand* expr();
+	Operand* term();
+	Operand* prim();
 
 public:
-	ANode* CreateTree(char* expr);
+	CExprParser(AExprBuilder* pBuilder) : theBuilder(pBuilder) {};
+	Operand* CreateTree(char* expr);
+
+	friend struct Memento;
 };
+
 
 
 #endif /* EXPRPARSER_H_ */

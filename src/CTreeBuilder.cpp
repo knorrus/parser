@@ -7,7 +7,7 @@
 
 #include "stdafx.h"
 
-#ifdef _DEBUG
+
 void debugPrn(ANode* node)
 {
 	TNode* tn = dynamic_cast<TNode*> (node);
@@ -40,11 +40,29 @@ void debugPrn(ANode* node)
 	BNode* bn = dynamic_cast<BNode*> (node);
 	if(bn)
 	{
-		cout << "Binary operation " << bn->getOperation() << '\n';
+		char t;
+		switch (bn->getOperation()){
+			case ADD :
+				t = '+';
+				break;
+			case MIN :
+				t = '-';
+				break;
+			case MULT :
+				t = '*';
+				break;
+			case DIVD :
+				t = '/';
+				break;
+			case DIVI :
+				t = '\\';
+				break;
+		}
+		cout << "Binary operation " << t << '\n';
 		return;
 	}
 }
-#endif
+
 
 Operand* CTreeBuilder::BuildTerminal(Memento* pCurrentState)
 {
@@ -62,9 +80,9 @@ Operand* CTreeBuilder::BuildTerminal(Memento* pCurrentState)
 			break;
 	}
 
-#ifdef _DEBUG
+
 	debugPrn(currentNode);
-#endif
+
 
 	return (Operand*)currentNode;
 }
@@ -74,10 +92,9 @@ Operand* CTreeBuilder::BuildUnaryOperation(Memento* pCurrentState, Operand* pLef
 	UNode* currentNode = new UNode(pCurrentState->token != MINUS ? FNC : UMIN);
 	currentNode->setLeft((ANode*)pLeft);
 
-#ifdef _DEBUG
+
 	debugPrn(currentNode);
 	cout << pCurrentState->tokenStr << '\n';
-#endif
 
 	return (Operand*)currentNode;
 }
@@ -88,9 +105,9 @@ Operand* CTreeBuilder::BuildBinaryOperation(token_value token, Operand* pLeft, O
 	currentNode->setLeft((ANode*)pLeft);
 	currentNode->setRight((ANode*)pRight);
 
-#ifdef _DEBUG
+
 	debugPrn(currentNode);
-#endif
+
 
 	return (Operand*)currentNode;
 }

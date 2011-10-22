@@ -6,172 +6,132 @@
  */
 #include "stdafx.h"
 
-token_value CExprParser::GetToken(char*& fromSymbol, char* pBufer)
-{
-	if(!(*fromSymbol)) return END;
-	if(isdigit(*fromSymbol))
-	{
-		do{
+token_value CExprParser::GetToken(char*& fromSymbol, char* pBufer) {
+	if (!(*fromSymbol))
+		return END;
+	if (isdigit(*fromSymbol)) {
+		do {
 			*pBufer++ = *fromSymbol++;
-		}while (isdigit(*fromSymbol));
-		if(*fromSymbol != '.')
-		{
+		} while (isdigit(*fromSymbol));
+		if (*fromSymbol != '.') {
 			*pBufer = 0;
 			return INUMBER;
 		}
 
-		else
-		{
+		else {
 			*pBufer++ = '.';
-			if(isdigit(*(++fromSymbol)))
-			{
-				do{
+			if (isdigit(*(++fromSymbol))) {
+				do {
 					*pBufer++ = *fromSymbol++;
-				}while (isdigit(*fromSymbol));
+				} while (isdigit(*fromSymbol));
 			}
 			*pBufer = 0;
 			return DNUMBER;
 		}
-	}
-	else
-	{
-		switch(*fromSymbol)
+	} else {
+		switch (*fromSymbol) {
+		case '*':
+		case '/':
+		case '\\':
+		case '+':
+		case '-':
+		case '(':
+		case ')': {
+			token_value token = token_value(fromSymbol[0]);
+			fromSymbol++;
+			return token;
+		}
+		default: //FUNCTION NAMES
 		{
-			case '*':
-			case '/':
-			case '\\':
-			case '+':
-			case '-':
-			case '(':
-			case ')':
-			   {
-				token_value token = token_value(fromSymbol[0]);
-				fromSymbol++;
-				return token;
-			   }
-			default: //FUNCTION NAMES
-			   {
-				if(isalpha(*fromSymbol))
-					do{
-						*pBufer++ = *fromSymbol++;
-					}while(isalpha(*fromSymbol));
-				*pBufer = 0;
-				return NAME;
-			   }
+			if (isalpha(*fromSymbol))
+				do {
+					*pBufer++ = *fromSymbol++;
+				} while (isalpha(*fromSymbol));
+			*pBufer = 0;
+			return NAME;
+		}
 		}
 	}
 }
 
-ANode* CExprParser::expr()
-{
-	ANode *left = term();
-	ANode *currentNode;
+Operand* CExprParser::expr() {
+	Operand* left = term();
+	Operand* right = NULL;
 
-	for(;;)
-	{
-		switch(currentToken)
-		{
-			case PLUS:
- 				currentNode = new BNode(ADD);
-				break;
-			case MINUS:
-				currentNode = new BNode(MIN);
-				break;
-			default:
-				return left;
+	for (;;) {
+		switch (currentToken) {
+		case PLUS:
+		case MINUS: {
+			token_value operation = currentToken;
+			currentToken = GetToken();
+			right = term();
+			left = theBuilder->BuildBinaryOperation(operation, left, right);
 		}
-		currentNode->setLeft(left);
-		currentToken = GetToken();
-		currentNode->setRight(term());
-		left = currentNode;
-	}
-}
-
-ANode* CExprParser::term()
-{
-	ANode *left = prim();
-	ANode *currentNode;
-
-	for(;;)
-	{
-		switch(currentToken)
-		{
-			case MUL:
-				currentNode = new BNode(MULT);
-				break;
-			case DIV:
-				currentNode = new BNode(DIVD);
-				break;
-			case IDIV:
-				currentNode = new BNode(DIVI);
-				break;
-			default:
-				return left;
-		}
-		currentNode->setLeft(left);
-		currentToken = GetToken();
-		currentNode->setRight(prim());
-		left = currentNode;
-	}
-}
-
-ANode* CExprParser::prim()
-{
-	ANode *currentNode;
-
-	switch(currentToken)
-	{
-		case INUMBER:
-			currentNode = new TNode();
-			*((TNode*)(currentNode)) = atoi(bufer);
-			currentToken = GetToken();
-			return currentNode;
-		case DNUMBER:
-			currentNode = new TNode();
-			*((TNode*)(currentNode)) = atof(bufer);
-			currentToken = GetToken();
-			return currentNode;
-		case NAME:
-			currentToken = GetToken();
-			if (currentToken == LP )
-			{
-				currentNode = new UNode(bufer);
-				currentNode->setLeft(prim());
-			}
-			else
-			{
-				currentNode = new TNode();
-				*((TNode*)currentNode) = bufer;
-			}
-			return currentNode;
-		case MINUS: //Unary minus
-			currentNode = new UNode(UMIN);
-			currentToken = GetToken();
-			currentNode->setLeft(prim());
-			return currentNode;
-		case LP:
-			currentToken = GetToken();
-			currentNode = expr();
-			if(currentToken != RP) return NULL;
-			currentToken = GetToken();
-			return currentNode;
-		case END:
-			return NULL;
+			break;
 		default:
-			return NULL;
+			return left;
+		}
 	}
 }
 
-ANode* CExprParser::CreateTree(char* exprStr)
-{
+Operand* CExprParser::term() {
+	Operand* left = prim();
+	Operand* right = NULL;
+
+	for (;;) {
+		switch (currentToken) {
+		case MUL:
+		case DIV:
+		case IDIV: {
+			token_value operation = currentToken;
+			currentToken = GetToken();
+			right = prim();
+			left = theBuilder->BuildBinaryOperation(operation, left, right);
+		}
+			break;
+		default:
+			return left;
+		}
+
+	}
+}
+
+Operand* CExprParser::prim() {
+	Memento currentState;
+	currentState.tokenStr = strcpy(new char[strlen(bufer)+1], bufer);
+	currentState.token = currentToken;
+	currentToken = GetToken();
+
+	switch (currentState.token) {
+	case INUMBER:
+	case DNUMBER:
+		return theBuilder->BuildTerminal(&currentState);
+	case MINUS: //Unary minus
+		return theBuilder->BuildUnaryOperation(&currentState, prim());
+	case NAME:
+		if (currentToken != LP)
+			return theBuilder->BuildTerminal(&currentState);
+		else
+			return theBuilder->BuildUnaryOperation(&currentState, prim());
+	case LP: {
+		Operand* currentOperand = expr();
+		if (currentToken != RP)
+			return NULL;
+		currentToken = GetToken();
+		return currentOperand;
+	}
+	case END:
+		return NULL;
+	default:
+		return NULL;
+	}
+}
+
+Operand* CExprParser::CreateTree(char* exprStr) {
 	pCurrentPosition = exprStr;
 	currentToken = BEGIN;
 
 	currentToken = GetToken();
 	return treeHead = expr();
 }
-
-
-
-
 
