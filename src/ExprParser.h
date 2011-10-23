@@ -21,10 +21,8 @@ class CExprParser
 	char bufer[MAX_TERM_STR_LEN +1];
 	token_value currentToken;
 
-	/*ANode* treeHead;*/
 	Operand* treeHead;
 	AExprBuilder* theBuilder;
-
 
 protected:
 	virtual token_value GetToken(char*& fromSymbol, char* pBufer);

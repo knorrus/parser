@@ -11,7 +11,9 @@
 #include "ExprTypes.h"
 
 const int MAX_NAMED_CONST_LEN = 9;
+
 class AVisitor;
+
 struct AResult
 {
 };
