@@ -10,8 +10,13 @@ int UNode::maxNameLength = 10;
 
 UNode::~UNode()
 {
-	if (m_pFncName) delete m_pFncName;
-	if (pArg) delete pArg;
+	if(pArg) delete pArg;
+	if(fncName) delete fncName;
+}
+
+void UNode::setFunction(char* name)
+{
+	fncName = strcpy(new char[strlen(name)+1], name);
 }
 
 BNode::~BNode()
@@ -39,6 +44,31 @@ TNode& TNode::operator = (char* str)
 	data.type = NCONST;
 	strncpy(data.varData.namedConst, str, MAX_NAMED_CONST_LEN);
 	return *this;
+}
+
+double TNode::toDouble() const
+{
+	switch(data.type)
+	{
+		case INT: return data.varData.i;
+		case DBL: return data.varData.d;
+		default: return 0;
+	}
+}
+
+void TNode::Accept(AVisitor& theVisitor, AResult* pResult)
+{
+	theVisitor.Visit(this, pResult);
+}
+
+void UNode::Accept(AVisitor& theVisitor, AResult* pResult)
+{
+	theVisitor.Visit(this, pResult);
+}
+
+void BNode::Accept(AVisitor& theVisitor, AResult* pResult)
+{
+	theVisitor.Visit(this, pResult);
 }
 
 

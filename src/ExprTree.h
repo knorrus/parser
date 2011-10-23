@@ -11,6 +11,10 @@
 #include "ExprTypes.h"
 
 const int MAX_NAMED_CONST_LEN = 9;
+class AVisitor;
+struct AResult
+{
+};
 
 class ANode : public Operand
 {
@@ -20,6 +24,9 @@ public:
 	virtual OperandType GetType() = 0;
 	virtual void setRight(ANode*) = 0;
 	virtual void setLeft(ANode*) = 0;
+
+	virtual void Accept(AVisitor& theVisitor, AResult*) = 0;
+
 	virtual ~ANode() {};
 };
 
@@ -51,6 +58,9 @@ public:
 	TNode& operator = (int);
 	TNode& operator = (double);
 	TNode& operator = (char*);
+	double toDouble() const;
+
+	virtual void Accept(AVisitor& theVisitor, AResult*);
 };
 
 class UNode: public ANode
@@ -58,28 +68,27 @@ class UNode: public ANode
 private:
 	ANode* pArg;
 	UOperation operation;
-	char* m_pFncName;
+	char* fncName;
 
 public:
 	static int maxNameLength;
 
-	UNode(UOperation o) : pArg(NULL), operation(o), m_pFncName(NULL) {}
-	UNode(char* fncName): pArg(NULL), operation(FNC)
-	{
-		int len = strlen(fncName);
-		len = len < maxNameLength ? len : maxNameLength;
-		m_pFncName = new char[len+1] ;
-		strncpy(m_pFncName, fncName, len+1);
-	}
+	UNode(UOperation o) : pArg(NULL), operation(o), fncName(NULL) {}
 	virtual ~UNode();
+
+	virtual OperandType GetType() {return isUnary;};
 
 	virtual ANode* getRight() const {return pArg;}
 	virtual ANode* getLeft() const {return pArg;}
 	virtual void setRight(ANode* pNode) {pArg = pNode;}
 	virtual void setLeft(ANode* pNode) {pArg = pNode;}
-	virtual OperandType GetType() {return isUnary;};
 
 	UOperation getOperation() const {return operation;}
+
+	char* getFunction() const {return fncName;}
+	void setFunction(char*);
+
+	virtual void Accept(AVisitor& theVisitor, AResult*);
 };
 
 class BNode: public ANode
@@ -97,11 +106,20 @@ public:
 	virtual ANode* getLeft() const {return pArgL;}
 	virtual void setRight(ANode* pNode) {pArgR = pNode;}
 	virtual void setLeft(ANode* pNode) {pArgL = pNode;}
-	virtual OperandType GetType() {return isBinary;};
 
 	BOperation getOperation() const {return operation;}
+	virtual OperandType GetType() {return isBinary;};
+
+	virtual void Accept(AVisitor& theVisitor, AResult*);
 };
 
+class AVisitor
+{
+public:
+	virtual void Visit(TNode*, AResult*) =0;
+	virtual void Visit(UNode*, AResult*) =0;
+	virtual void Visit(BNode*, AResult*) =0;
+};
 
 
 #endif /* EXPRTREE_H_ */

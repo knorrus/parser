@@ -15,7 +15,10 @@ int main()
 	AExprBuilder* treeBuilder = new CTreeBuilder();
 	CExprParser* parser = new CExprParser(treeBuilder);
 	Operand* tree = parser->CreateTree(arg);
+	CalcVisitor theVisitor;
+	double result = theVisitor.CalculateTree((ANode*)tree);
 	delete tree;
+	cout << "The result is " << result << endl;
 	return 0;
 }
 

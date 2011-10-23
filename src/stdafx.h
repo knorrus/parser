@@ -18,10 +18,8 @@
 #include "ExprParser.h"
 #include "ExprTree.h"
 #include "ExprTypes.h"
+#include "Visitor.h"
 
 using namespace std;
-
-
-
 
 #endif /* STDAFX_H_ */
