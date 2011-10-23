@@ -29,7 +29,7 @@ void debugPrn(ANode* node) {
 	}
 	UNode* un = dynamic_cast<UNode*>(node);
 	if (un) {
-		cout << "Unary operation " << un->getOperation() << '\n';
+		cout << "Unary operation ";
 		return;
 	}
 	BNode* bn = dynamic_cast<BNode*>(node);
@@ -70,16 +70,13 @@ Operand* CTreeBuilder::BuildTerminal(Memento* pCurrentState) {
 		*currentNode = pCurrentState->tokenStr;
 		break;
 	}
-
-	debugPrn(currentNode);
-
+										/*Debug print*/
+										debugPrn(currentNode);
 	return (Operand*) currentNode;
 }
 
-Operand* CTreeBuilder::BuildUnaryOperation(Memento* pCurrentState,
-		Operand* pLeft) {
+Operand* CTreeBuilder::BuildUnaryOperation(Memento* pCurrentState, Operand* pLeft) {
 	UNode* currentNode;
-
 	if (pCurrentState->token == MINUS) {
 		currentNode = new UNode(UMIN);
 	} else {
@@ -87,21 +84,17 @@ Operand* CTreeBuilder::BuildUnaryOperation(Memento* pCurrentState,
 		currentNode->setFunction(pCurrentState->tokenStr);
 	}
 	currentNode->setLeft((ANode*) pLeft);
-
-	debugPrn(currentNode);
-	cout << pCurrentState->tokenStr << '\n';
-
+										/*Debug print*/
+										debugPrn(currentNode); cout << pCurrentState->tokenStr << '\n';
 	return (Operand*) currentNode;
 }
 
-Operand* CTreeBuilder::BuildBinaryOperation(token_value token, Operand* pLeft,
-		Operand* pRight) {
+Operand* CTreeBuilder::BuildBinaryOperation(token_value token, Operand* pLeft, Operand* pRight) {
 	BNode* currentNode = new BNode((BOperation) token);
 	currentNode->setLeft((ANode*) pLeft);
 	currentNode->setRight((ANode*) pRight);
-
-	debugPrn(currentNode);
-
+										/*Debug print*/
+										debugPrn(currentNode);
 	return (Operand*) currentNode;
 }
 

@@ -6,7 +6,10 @@
  */
 #include "stdafx.h"
 
-// ExprParser.exe 1*(2+2)*3
+#include "math.h"
+
+using namespace ExprTree;
+
 int main()
 {
 	char* arg = new char[100];
@@ -15,9 +18,11 @@ int main()
 	AExprBuilder* treeBuilder = new CTreeBuilder();
 	CExprParser* parser = new CExprParser(treeBuilder);
 	Operand* tree = parser->CreateTree(arg);
-	CalcVisitor theVisitor;
-	double result = theVisitor.CalculateTree((ANode*)tree);
-	delete tree;
+
+	CalcVisitor* pVisitor = CalcVisitor::Instance();
+	double result = pVisitor->CalculateTree((ANode*)tree);
+
+			delete tree;
 	cout << "The result is " << result << endl;
 	return 0;
 }
