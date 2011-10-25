@@ -10,6 +10,7 @@
 #pragma once
 
 #include "ExprTree.h"
+#include "ExprTypes.h"
 
 #include <string>
 #include <vector>
@@ -94,6 +95,7 @@ class CalcVisitor: public AVisitor
 private:
 	static STRING2FNC function;
 	static CalcVisitor* _instance;
+	static NameTable* namedParams;
 
 protected:
 	CalcVisitor() {};

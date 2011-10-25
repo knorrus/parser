@@ -9,7 +9,6 @@
 #include "math.h"
 
 int main() {
-
 	try {
 		char* arg = new char[100];
 		cout << "Enter expression " << endl;
@@ -19,15 +18,22 @@ int main() {
 		Operand* tree = parser->CreateTree(arg);
 		CalcVisitor* pVisitor = CalcVisitor::Instance();
 		double result = pVisitor->CalculateTree((ANode*) tree);
+			cout << "The result is " << result << endl;
 		delete tree;
-		cout << "The result is " << result << endl;
+		delete pVisitor;
+		delete parser;
+		delete treeBuilder;
 		return 0;
-	} catch (string error_string) {
-		cout << error_string << '\n';
-		return 1;
-	} catch (...) {
+	}
+	catch (string error)
+	{
+		cout << error << endl;
 		return 1;
 	}
-	return 2;
+	catch (...)
+	{
+		return 2;
+	}
+	return 3;
 }
 
