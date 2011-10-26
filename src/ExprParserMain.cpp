@@ -9,6 +9,7 @@
 #include "math.h"
 
 int main() {
+	double result;
 	try {
 		char* arg = new char[100];
 		cout << "Enter expression " << endl;
@@ -17,8 +18,8 @@ int main() {
 		CExprParser* parser = new CExprParser(treeBuilder);
 		Operand* tree = parser->CreateTree(arg);
 		CalcVisitor* pVisitor = CalcVisitor::Instance();
-		double result = pVisitor->CalculateTree((ANode*) tree);
-			cout << "The result is " << result << endl;
+		result = pVisitor->CalculateTree((ANode*) tree);
+		cout << "The result is " << result << endl;
 		delete tree;
 		delete pVisitor;
 		delete parser;

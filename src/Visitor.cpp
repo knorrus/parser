@@ -5,29 +5,28 @@
  *      Author: pavel
  */
 #include "stdafx.h"
-#include <math.h>
+#include "MathFunctionsWrapper.h"
+
+using namespace math;
 
 CalcVisitor* CalcVisitor::_instance = NULL;	//use in implementation of singleton pattern
 STRING2FNC CalcVisitor::function; //array of pairs witch represent all possible unary math function like cos, tg, ln and others in view: function name <-> link to function
 NameTable* CalcVisitor::namedParams= NULL; //hash-map witch used for saved values of known in advance constants or variables
 
-double ctg(double value) {
-	return (1 / tan(value));
-}
-
-const int FNC_COUNT = 10;
-
-_pairS2F fnc_array[FNC_COUNT] = {
-		_pairS2F("sin", &sin),
-		_pairS2F("cos", &cos),
-		_pairS2F("tg", &tan),
-		_pairS2F("exp", &exp),
-		_pairS2F("lg", &log10),
-		_pairS2F("ln", &log),
-		_pairS2F("arctg", &atan),
-		_pairS2F("arcsin", &asin),
-		_pairS2F("arccos", &acos),
-		_pairS2F("ctg", &ctg) };
+const int FNC_COUNT = 11;
+	_pairS2F fnc_array[FNC_COUNT] = {
+	_pairS2F ("sqrt", &sqrt2),
+	_pairS2F("sin", &wSin),
+	_pairS2F("cos", &wCos),
+	_pairS2F("tg", &tg),
+	_pairS2F("exp", &exp),
+	_pairS2F("lg", &log10),
+	_pairS2F("ln", &log),
+	_pairS2F("arctg", &atan),
+	_pairS2F("arcsin", &asin),
+	_pairS2F("arccos", &acos),
+	_pairS2F("ctg", &ctg)
+};
 
 bool operator < (PtrS2F left, PtrS2F right) {
 	return (strcmp(left->first, right->first) < 0);
@@ -54,8 +53,6 @@ CalcVisitor* CalcVisitor::Instance() {
 		namedParams = new NameTable();
 		namedParams->insert("pi")->value = 3.1415926535897932385;
 		namedParams->insert("e")->value = 2.7182818284590452354;
-		/*for (int i = 0; i < FNC_COUNT; i++)
-		 cout << function.at(i)->first << '\n';*/
 	}
 	return _instance;
 }
@@ -114,7 +111,7 @@ void CalcVisitor::Visit(BNode* pNode, AResult* pResult) {
 		break;
 	case DIVD:
 	case DIVI:
-		if (right_value.value == 0) throw 1;
+		if (right_value.value == 0) throw DIVBYZERO;
 		left_value.value = left_value.value / right_value.value;
 		break;
 	}
@@ -125,12 +122,24 @@ double CalcVisitor::CalculateTree(ANode* head) {
 	try {
 		head->Accept(*this, (AResult*) (&node_value));
 	}
-	catch (int error_code){
-		cerr << "Division by zero";
+	catch (ErrorCodes errorCode){
+		switch (errorCode) {
+			case 1:
+				cerr << "Division by zero";
+			break;
+			case 2:
+				cerr << "Out of function definition area";
+			break;
+			case 3:
+				cerr << "Zero pow zero";
+			break;
+		};
+	}
+	catch (...){
+		cerr << "Undefined error";
 	}
 	return node_value.value;
-}
-;
+};
 
 name* NameTable::look(const char* p, int ins ) {
 	int ii = 0;
@@ -144,7 +153,7 @@ name* NameTable::look(const char* p, int ins ) {
 		if (strcmp(p, n->string) == 0)
 			return n;
 
-	if (ins == 0) throw 2;
+	if (ins == 0) throw 2; //TODO:: Handle this throw exception;
 
 	name* nn = new name;
 	nn->string = new char[strlen(p) + 1];strcpy

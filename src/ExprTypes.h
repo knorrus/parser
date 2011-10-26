@@ -8,6 +8,12 @@
 #ifndef EXPRTYPES_H_
 #define EXPRTYPES_H_
 
+enum ErrorCodes {
+	DIVBYZERO = 1,
+	OUTOFTYPE = 2,
+	ZEROINZERO =3
+};
+
 enum DataType {
 	INT, DBL, NCONST //DATA types witch can be saved in terminal element
 };
