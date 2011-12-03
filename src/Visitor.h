@@ -101,6 +101,8 @@ public:
 	virtual void Visit(UNode*, AResult*);
 	virtual void Visit(BNode*, AResult*);
 
+	virtual void loadParams (char* paramName, double paramValue);
+
 	static CalcVisitor* Instance();
 	double CalculateTree(ANode* head);
 };

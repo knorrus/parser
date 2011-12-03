@@ -84,6 +84,7 @@ class NameTable {
 public:
 	name* look(const char* p, int ins=0);
 	name* insert(const char* s) {return look(s,1);}
+	void refresh(name* param, const double value);
 };
 
 #endif /* EXPRTYPES_H_ */

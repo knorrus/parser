@@ -53,8 +53,22 @@ CalcVisitor* CalcVisitor::Instance() {
 		namedParams = new NameTable();
 		namedParams->insert("pi")->value = 3.1415926535897932385;
 		namedParams->insert("e")->value = 2.7182818284590452354;
+		namedParams->insert("x")->value = 3;
 	}
 	return _instance;
+}
+
+void CalcVisitor::loadParams(char* paramName, const double value){
+	name* pos = namedParams->look(paramName);
+	if (pos == NULL){
+		namedParams->insert(paramName)->value = value;
+	}
+	try {
+		namedParams->refresh(pos,value);
+	}
+	catch (...) {
+		cerr << "Can't refresh param "<< paramName <<endl;
+	}
 }
 
 void CalcVisitor::Visit(TNode* pNode, AResult* pResult) {
@@ -141,6 +155,10 @@ double CalcVisitor::CalculateTree(ANode* head) {
 	return node_value.value;
 };
 
+void NameTable::refresh(name* param, const double value){
+	param->value = value;
+}
+
 name* NameTable::look(const char* p, int ins ) {
 	int ii = 0;
 	const char* pp = p;
@@ -149,15 +167,16 @@ name* NameTable::look(const char* p, int ins ) {
 	if (ii < 0)
 		ii = -ii;
 	ii %= TBLSZ;
-	for (name* n = table[ii]; n; n = n->next)
+	for (name* n = table[ii]; n; n = n->next){
 		if (strcmp(p, n->string) == 0)
 			return n;
+	}
 
 	if (ins == 0) throw 2; //TODO:: Handle this throw exception;
 
 	name* nn = new name;
-	nn->string = new char[strlen(p) + 1];strcpy
-	(nn->string, p);
+	nn->string = new char[strlen(p) + 1];
+	strcpy(nn->string, p);
 	nn->value = 1;
 	nn->next = table[ii];
 	table[ii] = nn;

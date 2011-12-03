@@ -18,8 +18,13 @@ int main() {
 		CExprParser* parser = new CExprParser(treeBuilder);
 		Operand* tree = parser->CreateTree(arg);
 		CalcVisitor* pVisitor = CalcVisitor::Instance();
-		result = pVisitor->CalculateTree((ANode*) tree);
-		cout << "The result is " << result << endl;
+
+		for (int i=0; i<10; i++){
+			pVisitor->loadParams("x", i);
+			result = pVisitor->CalculateTree((ANode*) tree);
+			cout << "The result is " << result << endl;
+		}
+
 		delete tree;
 		delete pVisitor;
 		delete parser;
