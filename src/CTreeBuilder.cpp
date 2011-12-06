@@ -71,7 +71,7 @@ Operand* CTreeBuilder::BuildTerminal(Memento* pCurrentState) {
 		break;
 	}
 										/*Debug print*/
-										debugPrn(currentNode);
+                                                                                //debugPrn(currentNode);
 	return (Operand*) currentNode;
 }
 
@@ -85,7 +85,7 @@ Operand* CTreeBuilder::BuildUnaryOperation(Memento* pCurrentState, Operand* pLef
 	}
 	currentNode->setLeft((ANode*) pLeft);
 										/*Debug print*/
-										debugPrn(currentNode); cout << pCurrentState->tokenStr << '\n';
+                                                                                //debugPrn(currentNode); cout << pCurrentState->tokenStr << '\n';
 	return (Operand*) currentNode;
 }
 
@@ -94,7 +94,7 @@ Operand* CTreeBuilder::BuildBinaryOperation(token_value token, Operand* pLeft, O
 	currentNode->setLeft((ANode*) pLeft);
 	currentNode->setRight((ANode*) pRight);
 										/*Debug print*/
-										debugPrn(currentNode);
+                                                                                //debugPrn(currentNode);
 	return (Operand*) currentNode;
 }
 

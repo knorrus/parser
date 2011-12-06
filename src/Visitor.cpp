@@ -16,8 +16,8 @@ NameTable* CalcVisitor::namedParams= NULL; //hash-map witch used for saved value
 const int FNC_COUNT = 11;
 	_pairS2F fnc_array[FNC_COUNT] = {
 	_pairS2F ("sqrt", &sqrt2),
-	_pairS2F("sin", &wSin),
-	_pairS2F("cos", &wCos),
+        _pairS2F("sin", &sin),
+        _pairS2F("cos", &cos),
 	_pairS2F("tg", &tg),
 	_pairS2F("exp", &exp),
 	_pairS2F("lg", &log10),
@@ -133,25 +133,7 @@ void CalcVisitor::Visit(BNode* pNode, AResult* pResult) {
 
 double CalcVisitor::CalculateTree(ANode* head) {
 	CalcResult node_value;
-	try {
-		head->Accept(*this, (AResult*) (&node_value));
-	}
-	catch (ErrorCodes errorCode){
-		switch (errorCode) {
-			case 1:
-				cerr << "Division by zero";
-			break;
-			case 2:
-				cerr << "Out of function definition area";
-			break;
-			case 3:
-				cerr << "Zero pow zero";
-			break;
-		};
-	}
-	catch (...){
-		cerr << "Undefined error";
-	}
+        head->Accept(*this, (AResult*) (&node_value));
 	return node_value.value;
 };
 
