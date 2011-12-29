@@ -21,7 +21,7 @@ const int FNC_COUNT = 11;
 	_pairS2F("tg", &tg),
 	_pairS2F("exp", &exp),
 	_pairS2F("lg", &log10),
-	_pairS2F("ln", &log),
+        _pairS2F("ln", &ln),
 	_pairS2F("arctg", &atan),
 	_pairS2F("arcsin", &asin),
 	_pairS2F("arccos", &acos),

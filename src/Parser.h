@@ -1,6 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
-#include "stdafx.h";
+#include "stdafx.h"
 
 typedef pair<double, double> point;
 
