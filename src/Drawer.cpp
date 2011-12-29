@@ -58,9 +58,10 @@ double Drawer::findMax(vector<point> result){
     while ((temp.type != GRAPHPOINT) && (iter != result.end())){
         temp = *iter++;
     }
+    max = temp.second;
     for (iter; iter != result.end(); iter++){
         temp = *iter;
-        if ((temp.second > max) && (temp.type = GRAPHPOINT))
+        if ((temp.second > max) && (temp.type == GRAPHPOINT))
             max = temp.second;
     }
     return max;
@@ -73,9 +74,10 @@ double Drawer::findMin(vector<point> result){
     while ((temp.type != GRAPHPOINT) && (iter != result.end())){
         temp = *iter++;
     }
+    min = temp.second;
     for (iter; iter != result.end(); iter++){
         temp = *iter;
-        if ((temp.second < min) && (temp.type = GRAPHPOINT)){
+        if ((temp.second < min) && (temp.type == GRAPHPOINT)){
             min = temp.second;
         }
     }
