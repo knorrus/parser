@@ -15,7 +15,7 @@ Parser::~Parser(){
 }
 
 double abs (double value) {
-        return value < 0 ? -value : value;
+    return value < 0 ? -value : value;
 }
 
 vector<point> Parser::tabulate (double start, double end, char* function){
@@ -27,25 +27,34 @@ vector<point> Parser::tabulate (double start, double end, char* function){
     for (double i=start; i<end; i+=step) {
         pVisitor->loadParams("x", i);
         try {
-            p.first = i;
             p.second = pVisitor->CalculateTree((ANode*) tree);
+            p.first = i;
+            p.type = GRAPHPOINT;
             resultSet.push_back(p);
         }
         catch (ErrorCodes errorCode){
-                switch (errorCode) {
-                        case 1:
-                                cerr << "Division by zero";
-                        break;
-                        case 2:
-                                cerr << "Out of function definition area";
-                        break;
-                        case 3:
-                                cerr << "Zero pow zero";
-                        break;
-                };
+            switch (errorCode) {
+            case DIVBYZERO:
+                //cerr << "Division by zero";
+                p.second = 0;
+                p.first = i;
+                p.type = PDFK;
+                resultSet.push_back(p);
+                break;
+            case OUTOFTYPE:
+                //cerr << "Out of function definition area";
+                p.second = 0;
+                p.first = i;
+                p.type = PDSK;
+                resultSet.push_back(p);
+                break;
+            case ZEROINZERO:
+                cerr << "Zero pow zero" << endl;
+                break;
+            };
         }
         catch (...){
-            cerr << "Undefined error";
+            cerr << "Undefined error"<< endl;
         }
     }
     return resultSet;

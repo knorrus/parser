@@ -14,6 +14,17 @@ enum ErrorCodes {
 	ZEROINZERO =3
 };
 
+enum PointTypes {
+    GRAPHPOINT = 0,
+    PDFK = 1, //point of discontinuity of the first kind
+    PDSK = 2, //point of discontinuity of the second kind
+};
+
+struct point {
+    double first, second;
+    PointTypes type;
+};
+
 enum DataType {
 	INT, DBL, NCONST //DATA types witch can be saved in terminal element
 };

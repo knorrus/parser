@@ -1,6 +1,7 @@
 #include "Drawer.h"
 
 
+
 void Drawer::drawGridLines(QGraphicsScene* scene){
     QPen pen(QColor(205, 92, 92), 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
     for (int i = 0; i<= scene->width(); i+=25){
@@ -27,7 +28,6 @@ void Drawer::drawGraph(QVector<QPoint> points, QGraphicsScene* scene){
 
 QVector<QPoint> Drawer::scaleToScene (vector<point> result, QGraphicsScene* scene){
     QVector<QPoint> points;
-    vector<point>::iterator iter;
     point p;
 
     double minY = this->findMin(result);
@@ -52,25 +52,32 @@ QVector<QPoint> Drawer::scaleToScene (vector<point> result, QGraphicsScene* scen
 };
 
 double Drawer::findMax(vector<point> result){
-    double max = result.at(0).second;
-    point temp;
-    vector<point>::iterator iter;
-    for (iter=result.begin(); iter != result.end(); iter++){
+    vector<point>::iterator iter = result.begin();
+    double max;
+    point temp = result.front();
+    while ((temp.type != GRAPHPOINT) && (iter != result.end())){
+        temp = *iter++;
+    }
+    for (iter; iter != result.end(); iter++){
         temp = *iter;
-        if (temp.second > max)
+        if ((temp.second > max) && (temp.type = GRAPHPOINT))
             max = temp.second;
     }
     return max;
 }
 
 double Drawer::findMin(vector<point> result){
-    double min = result.at(0).second;
-    point temp;
-    vector<point>::iterator iter;
-    for (iter=result.begin(); iter != result.end(); iter++){
+    vector<point>::iterator iter = result.begin();
+    double min;
+    point temp = result.front();
+    while ((temp.type != GRAPHPOINT) && (iter != result.end())){
+        temp = *iter++;
+    }
+    for (iter; iter != result.end(); iter++){
         temp = *iter;
-        if (temp.second < min)
+        if ((temp.second < min) && (temp.type = GRAPHPOINT)){
             min = temp.second;
+        }
     }
     return min;
 }

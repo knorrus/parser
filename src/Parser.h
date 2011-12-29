@@ -2,8 +2,6 @@
 #define PARSER_H
 #include "stdafx.h"
 
-typedef pair<double, double> point;
-
 class Parser {
     private:
         AExprBuilder* builder;

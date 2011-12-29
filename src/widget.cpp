@@ -24,7 +24,7 @@ void Widget::on_check_clicked()
     QByteArray arr = ui->functionName->text().toAscii();
     char *function = arr.data();
 
-/*  ui->intervalStart->setInputMask("0.00");
+    /*  ui->intervalStart->setInputMask("0.00");
     ui->intervalStart->setMaxLength(10);
 
     ui->intervalEnd->setInputMask("0.00");
@@ -38,8 +38,8 @@ void Widget::on_check_clicked()
     Parser* parser = new Parser();
     vector<point> resultVector = parser->tabulate(start, end, function);
     Drawer* drawer = new Drawer();
-   scene->clear();
-  drawer->drawGridLines(scene);
+    scene->clear();
+    drawer->drawGridLines(scene);
     QVector<QPoint> points =  drawer->scaleToScene(resultVector, scene);
     drawer->drawGraph(points, scene);
     scene->update();
