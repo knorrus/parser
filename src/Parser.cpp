@@ -23,7 +23,7 @@ vector<point> Parser::tabulate (double start, double end, char* function){
     this->tree = this->exprParser->CreateTree(function);
     CalcVisitor* pVisitor = CalcVisitor::Instance();
     point p;
-    double step = abs(end-start)/350;
+    double step = abs(end-start)/750;
     for (double i=start; i<end; i+=step) {
         pVisitor->loadParams("x", i);
         try {

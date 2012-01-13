@@ -59,7 +59,7 @@
      <x>10</x>
      <y>540</y>
      <width>521</width>
-     <height>131</height>
+     <height>157</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_4">
@@ -92,25 +92,25 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="check">
-        <property name="text">
-         <string>Check</string>
-        </property>
-       </widget>
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="intervalEnd"/>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="tabulate">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="check">
         <property name="text">
          <string>Tabulate</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="intervalEnd"/>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="print">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Print</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

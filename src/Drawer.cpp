@@ -12,23 +12,25 @@ void Drawer::drawGridLines(QGraphicsScene* scene){
     }
 }
 
-void Drawer::drawGraph(QVector<QPoint> points, QGraphicsScene* scene){
-    QVector<QPoint>::iterator iter;
+void Drawer::drawGraph(vector<point> points, QGraphicsScene* scene){
+    vector<point>::iterator iterator = points.begin();
 
-    QPoint _point;
-    QPoint _next;
-    for(iter = points.begin(); iter!=points.end(); iter++){
-        _point = *iter;
-        _next = *++iter;
-        if (_next == points.last()){break;}
-        iter--;
-        scene->addLine(_point.x(), _point.y(), _next.x(), _next.y());
+    point first = *iterator++, second = *iterator++;
+
+    while(iterator != points.end()){
+
+        if ((first.type == GRAPHPOINT) && (second.type == GRAPHPOINT)){
+            scene->addLine(first.first, first.second, second.first, second.second);
+        }
+
+        first = second;
+        second = *iterator++;
+
     }
 }
 
-QVector<QPoint> Drawer::scaleToScene (vector<point> result, QGraphicsScene* scene){
-    QVector<QPoint> points;
-    point p;
+vector<point> Drawer::scaleToScene (vector<point> result, QGraphicsScene* scene){
+    point thePoint;
 
     double minY = this->findMin(result);
     double maxY = this->findMax(result);
@@ -44,11 +46,12 @@ QVector<QPoint> Drawer::scaleToScene (vector<point> result, QGraphicsScene* scen
     vector<point>::iterator itr = result.begin();
 
     while( itr != result.end() ){
-        p = *itr;
-        points.append(QPoint(((p.first-minX)*xScale), (scene->height()-(p.second-minY)*yScale)));
+
+        (*itr).first = ((*itr).first-minX)*xScale;
+        (*itr).second = scene->height()-((*itr).second-minY)*yScale;
         itr++;
     }
-    return points;
+    return result;
 };
 
 double Drawer::findMax(vector<point> result){

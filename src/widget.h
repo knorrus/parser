@@ -18,6 +18,8 @@ public:
 private slots:
     void on_check_clicked();
 
+    void on_print_clicked();
+
 private:
     Ui::Widget *ui;
 };

@@ -13,7 +13,7 @@
 
 namespace math {
 
-        double const eps = 0.01;
+        double const eps = 0.05;
 	double const pi = 3.14159265;
 
 	double abs (double value) {
@@ -22,17 +22,17 @@ namespace math {
 
 	double tg (double value){
 		double temp;
-		temp = (value/(pi/2));
-                if (abs(round(temp)-temp) < eps){
-			throw OUTOFTYPE;
-		}
+                temp = (value/pi);
+                if (abs(temp - floor(temp) -0.5) < eps){
+                        throw OUTOFTYPE;
+                }
                 return tan(value);
 	}
 
         double ctg (double value){
                 double temp;
                 temp = (value/pi);
-                if (abs(round(temp)-temp) < eps){
+                if (abs(temp - floor(temp)) < eps){
                         throw OUTOFTYPE;
                 }
                 temp = cos(value)/sin(value);

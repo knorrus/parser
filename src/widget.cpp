@@ -20,13 +20,11 @@ Widget::~Widget()
 
 void Widget::on_check_clicked()
 {
-
     QByteArray arr = ui->functionName->text().toAscii();
     char *function = arr.data();
 
     /*  ui->intervalStart->setInputMask("0.00");
     ui->intervalStart->setMaxLength(10);
-
     ui->intervalEnd->setInputMask("0.00");
     ui->intervalEnd->setMaxLength(10);
 */
@@ -40,9 +38,23 @@ void Widget::on_check_clicked()
     Drawer* drawer = new Drawer();
     scene->clear();
     drawer->drawGridLines(scene);
-    QVector<QPoint> points =  drawer->scaleToScene(resultVector, scene);
+
+    vector<point> points =  drawer->scaleToScene(resultVector, scene);
     drawer->drawGraph(points, scene);
     scene->update();
-
+    ui->print->setEnabled(true);
     delete parser;
+}
+
+void Widget::on_print_clicked()
+{
+    QGraphicsScene *scene = ui->canvas->scene();
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setPaperSize(QPrinter::A4);
+    if( QPrintDialog(&printer).exec() == QDialog::Accepted ){
+        QPainter painter(&printer);
+        scene->render(&painter);
+        painter.begin(&printer);
+        painter.end();
+    }
 }
