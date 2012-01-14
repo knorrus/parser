@@ -4,14 +4,27 @@
 #include "QtGui"
 #include <Parser.h>
 
-class Drawer{
+class FuntionDrawer{
 public:
-    vector<point> scaleToScene (vector<point> result, QGraphicsScene* scene);
-    void drawGridLines(QGraphicsScene* scene);
-    void drawGraph(vector<point> points, QGraphicsScene* scene);
+    FuntionDrawer(vector<point>* result, QGraphicsScene* scene);
+    void drawGridLines();
+    void drawGraph();
 private:
-    double findMax (vector<point> result);
-    double findMin(vector<point> result);
+    QGraphicsScene* scene;
+    vector<point>* result;
+
+    double minY;
+    double maxY;
+
+    double minX;
+    double maxX;
+
+    void scaleToScene ();
+    void addXaxe(double y);
+    void addYaxe(double x);
+
+    double findMax ();
+    double findMin();
 };
 
 #endif // DRAWER_H

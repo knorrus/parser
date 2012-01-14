@@ -22,28 +22,30 @@ void Widget::on_check_clicked()
 {
     QByteArray arr = ui->functionName->text().toAscii();
     char *function = arr.data();
+    ui->print->setEnabled(true);
 
     /*  ui->intervalStart->setInputMask("0.00");
     ui->intervalStart->setMaxLength(10);
     ui->intervalEnd->setInputMask("0.00");
     ui->intervalEnd->setMaxLength(10);
 */
-
     double start = ui->intervalStart->text().toDouble();
     double end = ui->intervalEnd->text().toDouble();
 
     QGraphicsScene *scene = ui->canvas->scene();
+    scene->clear();
+
     Parser* parser = new Parser();
     vector<point> resultVector = parser->tabulate(start, end, function);
-    Drawer* drawer = new Drawer();
-    scene->clear();
-    drawer->drawGridLines(scene);
 
-    vector<point> points =  drawer->scaleToScene(resultVector, scene);
-    drawer->drawGraph(points, scene);
+    FuntionDrawer* drawer = new FuntionDrawer(&resultVector, scene);
+    drawer->drawGridLines();
+    drawer->drawGraph();
+
     scene->update();
-    ui->print->setEnabled(true);
+
     delete parser;
+    delete drawer;
 }
 
 void Widget::on_print_clicked()
