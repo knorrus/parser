@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
+    <width>600</width>
     <height>685</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -18,7 +24,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>540</width>
+    <width>600</width>
     <height>685</height>
    </size>
   </property>
@@ -30,7 +36,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>520</width>
+     <width>580</width>
      <height>520</height>
     </rect>
    </property>
@@ -42,18 +48,15 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>520</width>
+     <width>580</width>
      <height>520</height>
     </size>
    </property>
-   <property name="maximumSize">
-    <size>
-     <width>520</width>
-     <height>520</height>
-    </size>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
