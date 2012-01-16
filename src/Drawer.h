@@ -18,6 +18,7 @@ private:
 
     double minX;
     double maxX;
+    double logBase;
 
     void scaleToScene ();
     void addXaxe(double y);
@@ -25,6 +26,7 @@ private:
 
     double findMax ();
     double findMin();
+    QString stringify(double x);
 };
 
 #endif // DRAWER_H
