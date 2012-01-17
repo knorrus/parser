@@ -23,27 +23,23 @@ void Widget::on_check_clicked()
     QByteArray arr = ui->functionName->text().toAscii();
     char *function = arr.data();
     ui->print->setEnabled(true);
-
-    /*  ui->intervalStart->setInputMask("0.00");
-    ui->intervalStart->setMaxLength(10);
-    ui->intervalEnd->setInputMask("0.00");
-    ui->intervalEnd->setMaxLength(10);
-*/
+    ui->intervalStart->setValidator(new QDoubleValidator());
+    ui->intervalStart->setMaxLength(6);
+    ui->intervalEnd->setValidator(new QDoubleValidator());
+    ui->intervalEnd->setMaxLength(6);
     double start = ui->intervalStart->text().toDouble();
     double end = ui->intervalEnd->text().toDouble();
-
     QGraphicsScene *scene = ui->canvas->scene();
-    scene->clear();
-
+    if (ui->clearPrevious->isChecked()){
+        scene->clear();
+    }
     Parser* parser = new Parser();
     vector<point> resultVector = parser->tabulate(start, end, function);
-
     FuntionDrawer* drawer = new FuntionDrawer(&resultVector, scene, start, end);
     drawer->drawGridLines();
     drawer->drawGraph();
-
     scene->update();
-
+    ui->authors->setText("authors: Knorr, Boyko");
     delete parser;
     delete drawer;
 }
