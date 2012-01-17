@@ -160,7 +160,6 @@ name* NameTable::look(const char* p, int ins ) {
     }
 
     if (ins == 0) throw 2; //TODO:: Handle this throw exception;
-
     name* nn = new name;
     nn->string = new char[strlen(p) + 1];
     strcpy(nn->string, p);
