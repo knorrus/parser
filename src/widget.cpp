@@ -42,10 +42,6 @@ void Widget::on_check_clicked()
     drawer->drawGridLines();
     drawer->drawGraph();
 
-    QGraphicsTextItem * text = scene->addText("trololo");
-    text->setX(-40);
-    text->setY(0);
-
     scene->update();
 
     delete parser;
