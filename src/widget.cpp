@@ -1,6 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
-#include "string";
+#include "string"
 #include <Parser.h>
 #include <Drawer.h>
 
@@ -38,7 +38,7 @@ void Widget::on_check_clicked()
     Parser* parser = new Parser();
     vector<point> resultVector = parser->tabulate(start, end, function);
 
-    FuntionDrawer* drawer = new FuntionDrawer(&resultVector, scene);
+    FuntionDrawer* drawer = new FuntionDrawer(&resultVector, scene, start, end);
     drawer->drawGridLines();
     drawer->drawGraph();
 

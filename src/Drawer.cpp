@@ -7,112 +7,26 @@ double dAbs (double value) {
     return value < 0 ? -value : value;
 }
 
-QString FuntionDrawer::stringify(double x) {
-    stringstream ss;
-    if (logBase > 2){
-        x > 0 ? x = round(x) : x = floor(x);
-    }
-    x > 0 ? x = round(x*logPow)/logPow : x = floor(x*logPow)/logPow;
-    ss << x;
-    string s = ss.str();
-    return QString::fromStdString(ss.str());
-}
-
-FuntionDrawer::FuntionDrawer(vector<point>* result, QGraphicsScene* scene){
+FuntionDrawer::FuntionDrawer(vector<point>* result, QGraphicsScene* scene, double start, double end){
     this->result = result;
     this->scene = scene;
     this->maxY = this->findMax();
     this->minY = this->findMin();
-    this->minX = this->result->front().first;
-    this->maxX = this->result->back().first;
-    this->logBase = log10(maxY-minY);
-    logBase < 0 ? logBase = floor(logBase)-1 :  logBase = ceil(logBase);
-    logPow = dAbs(logBase);
-    logPow = round(exp(logPow * log(10)));
+    this->minX = start;
+    this->maxX = end;
+
+    labelFont = QFont("Helvetica [Cronyx]", 8);
+    labelFont.setStretch(QFont::SemiCondensed);
+
+    this->xLogBase = log10(maxX-minX);
+    xLogBase < 0 ? xLogBase = floor(xLogBase)-1 :  xLogBase = ceil(xLogBase);
+    xLogPow = dAbs(xLogBase);
+    xLogPow = round(exp(xLogPow * log(10)));
+    this->yLogBase = log10(maxY-minY);
+    yLogBase < 0 ? yLogBase = floor(yLogBase)-1 :  yLogBase = ceil(yLogBase);
+    yLogPow = dAbs(yLogBase);
+    yLogPow = round(exp(yLogPow * log(10)));
     this->scaleToScene();
-}
-
-void FuntionDrawer::drawGridLines(){
-    QPen pen(QColor(205, 92, 92), 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-    if ((minY*maxY > 0) && (minX*maxX > 0)){
-        //verical
-        for (int i = 0; i<= this->scene->width(); i+=25){
-            this->scene->addLine(i, 0, i, this->scene->height(), pen);
-        };
-        //horizontal
-        for (int i = 0; i<= this->scene->height(); i+=25){
-            this->scene->addLine(0, i, this->scene->width(), i,  pen);
-        }
-    }
-    if ((minY*maxY<=0) && (minX*maxX > 0)){
-        double yScale = scene->height()/(maxY-minY);
-        double zero = scene->height()+minY*yScale;
-        addXaxe(zero);
-        //horizontal under zero
-        for (int i = zero+25; i<= this->scene->height(); i+=25){
-            this->scene->addLine(0, i, this->scene->width(), i,  pen);
-        }
-        //horizontal before zero
-        for (int i = zero-25; i>=0; i-=25){
-            this->scene->addLine(0, i, this->scene->width(), i,  pen);
-        }
-        //verical
-        for (int i = 0; i<= this->scene->width(); i+=25){
-            this->scene->addLine(i, 0, i, this->scene->height(), pen);
-        };
-    }
-    if ((minY*maxY > 0) && (minX*maxX <= 0)){
-        double xScale = scene->width()/(maxX-minX);
-        double zero = -minX*xScale;
-        addYaxe(zero);
-        //vertical under zero
-        for (int i = zero+25; i<= this->scene->width(); i+=25){
-            this->scene->addLine(i, 0, i, scene->height(),  pen);
-        }
-        //vertical before zero
-        for (int i = zero-25; i>=0; i-=25){
-            this->scene->addLine(i, 0, i, scene->height(),  pen);
-        }
-
-        //horizontal
-        for (int i = 0; i<= this->scene->height(); i+=25){
-            this->scene->addLine(0, i, this->scene->width(), i,  pen);
-        }
-    }
-    if ((minY*maxY <= 0) && (minX*maxX <= 0)){
-        double yScale = scene->height()/(maxY-minY);
-        double zero = scene->height()+minY*yScale;
-        addXaxe(zero);
-        double yStep = (maxY-minY)/20.0;
-
-        double yCurrent = 0;
-        for (int i = zero-25; i>=0; i-=25){
-            this->scene->addLine(0, i, this->scene->width(), i,  pen);
-            QGraphicsTextItem *text = scene->addText(stringify(yCurrent));
-            text->setX(0);
-            text->setY(i);
-            yCurrent += yStep;
-        }
-        yCurrent = -yStep;
-        for (int i = zero+25; i<= this->scene->height(); i+=25){
-            this->scene->addLine(0, i, this->scene->width(), i,  pen);
-            QGraphicsTextItem *text = scene->addText(stringify(yCurrent));
-            text->setX(0);
-            text->setY(i-25);
-            yCurrent -= yStep;
-        }
-        double xScale = scene->width()/(maxX-minX);
-        zero = -minX*xScale;
-        addYaxe(zero);
-        //vertical under zero
-        for (int i = zero+25; i<= this->scene->width(); i+=25){
-            this->scene->addLine(i, 0, i, scene->height(),  pen);
-        }
-        //vertical before zero
-        for (int i = zero-25; i>=0; i-=25){
-            this->scene->addLine(i, 0, i, scene->height(),  pen);
-        }
-    };
 }
 
 void FuntionDrawer::drawGraph(){
@@ -127,6 +41,121 @@ void FuntionDrawer::drawGraph(){
     }
 }
 
+QString FuntionDrawer::stringifyX(double x) {
+    stringstream ss;
+    if (xLogBase > 2){
+        x > 0 ? x = round(x) : x = floor(x);
+    }
+    x > 0 ? x = ceil(x*xLogPow)/xLogPow : x = floor(x*xLogPow)/xLogPow;
+    ss << x;
+    string s = ss.str();
+    return QString::fromStdString(ss.str());
+}
+
+QString FuntionDrawer::stringifyY(double y) {
+    stringstream ss;
+    if (yLogBase > 2){
+        y > 0 ? y = round(y) : y = floor(y);
+    }
+    y > 0 ? y = round(y*yLogPow)/yLogPow : y = floor(y*yLogPow)/yLogPow;
+    ss << y;
+    string s = ss.str();
+    return QString::fromStdString(ss.str());
+}
+
+
+void FuntionDrawer::addXaxe(double y) {
+    QPen pen(QColor(0, 0, 128), 2);
+    scene->addLine(0, y, scene->width(), y, pen);
+    QGraphicsTextItem *text = scene->addText(stringifyY(0), labelFont);
+    text->setX(0);
+    text->setY(y);
+    text->setDefaultTextColor(QColor(0, 0, 238));
+}
+
+void FuntionDrawer::addYaxe(double x) {
+    QPen pen(QColor(0, 0, 128), 2);
+    scene->addLine(x, 0, x, scene->height(), pen);
+    QGraphicsTextItem *text = scene->addText(stringifyX(0), labelFont);
+    text->setX(x);
+    text->setY(scene->height()-20);
+    text->setDefaultTextColor(QColor(0, 0, 238));
+}
+
+
+void FuntionDrawer::addHorizontalLines(double begin, double end, double step, double label){
+    QPen pen(QColor(205, 92, 92), 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+    double yStep = (maxY-minY)/20.0;
+    double yCurrent = label;
+    for (int i = begin; i<= end; i+=step){
+        this->scene->addLine(0, i, this->scene->width(), i,  pen);
+        if (yCurrent - yStep >= minY){
+            QGraphicsTextItem *text = scene->addText(stringifyY(yCurrent), labelFont);
+            text->setX(0);
+            text->setY(i);
+            text->setDefaultTextColor(QColor(0, 0, 238));
+            yCurrent -= yStep;
+        }
+    }
+}
+
+void FuntionDrawer::addVerticalLines(double begin, double end, double step, double label){
+    QPen pen(QColor(205, 92, 92), 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+    double xStep = (maxX-minX)/20.0;
+    double xCurrent = label;
+    for (int i = begin; i<= end; i+=step){
+        this->scene->addLine(i, 0, i, this->scene->height(), pen);
+        if (xCurrent + xStep <= maxX){
+            QGraphicsTextItem *text = scene->addText(stringifyX(xCurrent), labelFont);
+            text->setX(i);
+            text->setY(scene->height()-20);
+            text->setDefaultTextColor(QColor(0, 0, 238));
+            xCurrent += xStep;
+        };
+    };
+}
+
+void FuntionDrawer::drawGridLines(){   
+    if ((minY*maxY > 0) && (minX*maxX > 0)){
+        addVerticalLines(0, scene->width(), 25, minX);
+        addHorizontalLines(0,scene->height(), 25, maxY);
+    }
+
+    if ((minY*maxY <= 0) && (minX*maxX > 0)){
+        double yScale = scene->height()/(maxY-minY);
+        double zero = scene->height()+minY*yScale;
+        addHorizontalLines(zero+25, scene->height(), 25, -(maxY-minY)/20.0);
+        addXaxe(zero);
+        addHorizontalLines(0, zero, 25, maxY);
+        addVerticalLines(0, scene->width(), 25, minX);
+    }
+
+    if ((minY*maxY > 0) && (minX*maxX <= 0)){
+        double xScale = scene->width()/(maxX-minX);
+        double zero = -minX*xScale;        
+        addHorizontalLines(0, scene->height(), 25, maxY);
+        addVerticalLines(zero+25, scene->width(), 25, (maxX-minX)/20.0);
+        addYaxe(zero);
+        addVerticalLines(0, zero-25, 25, minX);
+    }
+
+    if ((minY*maxY <= 0) && (minX*maxX <= 0)){
+        double yScale = scene->height()/(maxY-minY);
+        double zero = scene->height()+minY*yScale;
+        addHorizontalLines(0, zero-25, 25, maxY);
+        addXaxe(zero);
+        addHorizontalLines(zero+25, scene->height(),25, -(maxY-minY)/20.0);
+
+        double xScale = scene->width()/(maxX-minX);
+        zero = -minX*xScale;                  
+        addVerticalLines(zero+25, scene->width(), 25, (maxX-minX)/20.0);
+        addYaxe(zero);
+        addVerticalLines(0, zero-25, 25, minX);
+    };
+}
+
+
+
 void FuntionDrawer::scaleToScene (){
     double yScale = scene->height()/(maxY-minY);
     double xScale = scene->width()/(maxX-minX);
@@ -137,16 +166,6 @@ void FuntionDrawer::scaleToScene (){
         itr++;
     }
 };
-
-void FuntionDrawer::addXaxe(double y) {
-    QPen pen(QColor(0, 0, 128), 2);
-    scene->addLine(0, y, scene->width(), y, pen);
-}
-
-void FuntionDrawer::addYaxe(double x) {
-    QPen pen(QColor(0, 0, 128), 2);
-    scene->addLine(x, 0, x, scene->height(), pen);
-}
 
 double FuntionDrawer::findMax(){
     vector<point>::iterator iter = this->result->begin();

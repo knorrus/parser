@@ -6,14 +6,24 @@
 
 class FuntionDrawer{
 public:
-    FuntionDrawer(vector<point>* result, QGraphicsScene* scene);
+    FuntionDrawer(vector<point>* result, QGraphicsScene* scene, double start, double end);
     void drawGridLines();
     void drawGraph();
 protected:
+
+    /*Scale to scene: converting graph points to scena rectangle */
     void scaleToScene ();
-    QString stringify(double x);\
+
+    /*Converting double to string with given accuracy */
+    QString stringifyX(double x);
+    QString stringifyY(double y);
+
+    QFont labelFont;
+
     void addXaxe(double y);
     void addYaxe(double x);
+    void addHorizontalLines (double begin, double end, double step, double label);
+    void addVerticalLines (double begin, double end, double step, double label);
 private:
     QGraphicsScene* scene;
     vector<point>* result;
@@ -21,8 +31,11 @@ private:
     double maxY;
     double minX;
     double maxX;
-    double logBase;
-    double logPow;
+    double xLogBase; //log10 of the Y graph diapasone
+    double xLogPow;  //10^logBase
+    double yLogBase; //log10 of the Y graph diapasone
+    double yLogPow;  //10^logBase
+
     double findMax ();
     double findMin();
 
