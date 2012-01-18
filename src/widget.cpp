@@ -7,16 +7,30 @@
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    QGraphicsScene *scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,500,500);
+    QGraphicsScene *scene = new QGraphicsScene();   
     ui->canvas->setScene(scene);
+    drawer = NULL;
 }
 
 Widget::~Widget()
 {
     delete ui;
+    delete drawer;
 }
 
+void Widget::resizeEvent(QResizeEvent *event){
+    ui->canvas->scene()->setSceneRect(5, 5, ui->canvas->width()-10, ui->canvas->height()-10);
+    windowSize = QSize(this->height(), this->width());
+    if (event->oldSize() == windowSize){
+    if (drawer != NULL){
+        ui->canvas->scene()->clear();
+        drawer->scaleToScene();
+        drawer->drawGridLines();
+        drawer->drawGraph();
+        ui->canvas->update();
+    }    
+    }
+}
 
 void Widget::on_check_clicked()
 {
@@ -34,14 +48,14 @@ void Widget::on_check_clicked()
         scene->clear();
     }
     Parser* parser = new Parser();
-    vector<point> resultVector = parser->tabulate(start, end, function);
-    FuntionDrawer* drawer = new FuntionDrawer(&resultVector, scene, start, end);
+    resultVector = parser->tabulate(start, end, scene->width()/2, function);
+    drawer = new FuntionDrawer(&resultVector, scene, start, end);
     drawer->drawGridLines();
     drawer->drawGraph();
     scene->update();
     ui->authors->setText("authors: Knorr, Boyko");
     delete parser;
-    delete drawer;
+
 }
 
 void Widget::on_print_clicked()

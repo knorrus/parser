@@ -48,7 +48,6 @@ QString FuntionDrawer::stringifyX(double x) {
     }
     x > 0 ? x = ceil(x*xLogPow)/xLogPow : x = floor(x*xLogPow)/xLogPow;
     ss << x;
-    string s = ss.str();
     return QString::fromStdString(ss.str());
 }
 
@@ -59,7 +58,6 @@ QString FuntionDrawer::stringifyY(double y) {
     }
     y > 0 ? y = round(y*yLogPow)/yLogPow : y = floor(y*yLogPow)/yLogPow;
     ss << y;
-    string s = ss.str();
     return QString::fromStdString(ss.str());
 }
 
@@ -90,10 +88,10 @@ void FuntionDrawer::addHorizontalLines(double begin, double end, double step, do
     for (int i = begin; i<= end; i+=step){
         this->scene->addLine(0, i, this->scene->width(), i,  pen);
         if (yCurrent - yStep >= minY){
-            QGraphicsTextItem *text = scene->addText(stringifyY(yCurrent), labelFont);
-            text->setX(0);
-            text->setY(i);
-            text->setDefaultTextColor(QColor(0, 0, 238));
+        //    QGraphicsTextItem *text = scene->addText(stringifyY(yCurrent), labelFont);
+        //    text->setX(0);
+        //    text->setY(i);
+        //    text->setDefaultTextColor(QColor(0, 0, 238));
             yCurrent -= yStep;
         }
     }
@@ -106,22 +104,22 @@ void FuntionDrawer::addVerticalLines(double begin, double end, double step, doub
     for (int i = begin; i<= end; i+=step){
         this->scene->addLine(i, 0, i, this->scene->height(), pen);
         if (xCurrent + xStep <= maxX){
-            QGraphicsTextItem *text = scene->addText(stringifyX(xCurrent), labelFont);
-            text->setX(i);
-            text->setY(scene->height()-20);
-            text->setDefaultTextColor(QColor(0, 0, 238));
+       //     QGraphicsTextItem *text = scene->addText(stringifyX(xCurrent), labelFont);
+       //     text->setX(i);
+       //     text->setY(scene->height()-20);
+       //     text->setDefaultTextColor(QColor(0, 0, 238));
             xCurrent += xStep;
         };
     };
 }
 
 void FuntionDrawer::drawGridLines(){   
-    if ((minY*maxY > 0) && (minX*maxX > 0)){
+
         addVerticalLines(0, scene->width(), 25, minX);
         addHorizontalLines(0,scene->height(), 25, maxY);
-    }
 
-    if ((minY*maxY <= 0) && (minX*maxX > 0)){
+
+/*    if ((minY*maxY <= 0) && (minX*maxX > 0)){
         double yScale = scene->height()/(maxY-minY);
         double zero = scene->height()+minY*yScale;
         addHorizontalLines(zero+25, scene->height(), 25, -(maxY-minY)/20.0);
@@ -151,7 +149,7 @@ void FuntionDrawer::drawGridLines(){
         addVerticalLines(zero+25, scene->width(), 25, (maxX-minX)/20.0);
         addYaxe(zero);
         addVerticalLines(0, zero-25, 25, minX);
-    };
+    }; */
 }
 
 

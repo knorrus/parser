@@ -18,12 +18,12 @@ double abs (double value) {
     return value < 0 ? -value : value;
 }
 
-vector<point> Parser::tabulate (double start, double end, char* function){
+vector<point> Parser::tabulate (double start, double end, double dpi, char* function){
     vector<point> resultSet;
     this->tree = this->exprParser->CreateTree(function);
     CalcVisitor* pVisitor = CalcVisitor::Instance();
     point p;
-    double step = abs(end-start)/750;
+    double step = abs(end-start)/dpi;
     for (double i=start; i<end; i+=step) {
         pVisitor->loadParams("x", i);
         try {

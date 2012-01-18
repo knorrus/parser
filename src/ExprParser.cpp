@@ -132,7 +132,6 @@ Operand* CExprParser::prim() {
 Operand* CExprParser::CreateTree(char* exprStr) {
     pCurrentPosition = exprStr;
     currentToken = BEGIN;
-
     currentToken = GetToken();
     return treeHead = expr();
 }

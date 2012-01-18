@@ -8,11 +8,12 @@ class FuntionDrawer{
 public:
     FuntionDrawer(vector<point>* result, QGraphicsScene* scene, double start, double end);
     void drawGridLines();
-    void drawGraph();
-protected:
-
+    void drawGraph();    
     /*Scale to scene: converting graph points to scena rectangle */
     void scaleToScene ();
+    inline void setVector (vector<point>* result)
+        { this->result = result; }
+protected:
 
     /*Converting double to string with given accuracy */
     QString stringifyX(double x);
@@ -23,7 +24,7 @@ protected:
     void addXaxe(double y);
     void addYaxe(double x);
     void addHorizontalLines (double begin, double end, double step, double label);
-    void addVerticalLines (double begin, double end, double step, double label);
+    void addVerticalLines (double begin, double end, double step, double label);    
 private:
     QGraphicsScene* scene;
     vector<point>* result;

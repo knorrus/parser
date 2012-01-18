@@ -10,7 +10,7 @@ class Parser {
     public:
         Parser();
         Parser(AExprBuilder* builder);
-        vector<point> tabulate (double start, double end, char* function);
+        vector<point> tabulate (double start, double end, double dpi, char* function);
         ~Parser();
 };
 
