@@ -11,7 +11,8 @@
 enum ErrorCodes {
         DIVBYZERO = 1,
         OUTOFTYPE = 2,
-        ZEROINZERO =3
+        ZEROINZERO =3,
+        WRONGFORMAT = 5
 };
 
 enum PointTypes {

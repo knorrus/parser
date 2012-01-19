@@ -20,7 +20,12 @@ double abs (double value) {
 
 vector<point> Parser::tabulate (double start, double end, double dpi, char* function){
     vector<point> resultSet;
-    this->tree = this->exprParser->CreateTree(function);
+    try {
+        this->tree = this->exprParser->CreateTree(function);
+    }
+    catch (...){
+        throw WRONGFORMAT;
+    }
     CalcVisitor* pVisitor = CalcVisitor::Instance();
     point p;
     double step = abs(end-start)/dpi;
@@ -34,24 +39,24 @@ vector<point> Parser::tabulate (double start, double end, double dpi, char* func
         }
         catch (ErrorCodes errorCode){
             switch (errorCode) {
-            case DIVBYZERO:
-                //cerr << "Division by zero";
-                p.second = 0;
-                p.first = i;
-                p.type = PDFK;
-                resultSet.push_back(p);
-                break;
-            case OUTOFTYPE:
-                //cerr << "Out of function definition area";
-                p.second = 0;
-                p.first = i;
-                p.type = PDSK;
-                resultSet.push_back(p);
-                break;
-            case ZEROINZERO:
-                cerr << "Zero pow zero" << endl;
-                break;
-            };
+                case DIVBYZERO:
+                    //cerr << "Division by zero";
+                    p.second = 0;
+                    p.first = i;
+                    p.type = PDFK;
+                    resultSet.push_back(p);
+                    break;
+                case OUTOFTYPE:
+                    //cerr << "Out of function definition area";
+                    p.second = 0;
+                    p.first = i;
+                    p.type = PDSK;
+                    resultSet.push_back(p);
+                    break;
+                case ZEROINZERO:
+                    cerr << "Zero pow zero" << endl;
+                    break;
+                };
         }
         catch (...){
             cerr << "Undefined error"<< endl;

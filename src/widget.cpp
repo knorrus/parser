@@ -4,14 +4,19 @@
 #include <Parser.h>
 #include <Drawer.h>
 #include <QGraphicsScene>
+#include "graphicscanvas.h"
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
+    GraphicsCanvas* canvas = new GraphicsCanvas();
     ui->setupUi(this);
-    QGraphicsScene *scene = new QGraphicsScene();   
+    delete ui->canvas;
+    ui->canvas = canvas;
+    ui->verticalLayout_2->addWidget(ui->canvas);
+    QGraphicsScene *scene = new QGraphicsScene();      
     ui->canvas->setScene(scene);
-    windowSize = QSize(this->width(), this->height());
     drawer = NULL;
+    connect(canvas, SIGNAL(on_resize(QResizeEvent*)), SLOT(on_canvas_resize(QResizeEvent*)));
 }
 
 Widget::~Widget()
@@ -20,23 +25,20 @@ Widget::~Widget()
     delete drawer;
 }
 
-void Widget::resizeEvent(QResizeEvent *event){
+void Widget::on_canvas_resize(QResizeEvent *event){
     ui->canvas->scene()->setSceneRect(5, 5, ui->canvas->width()-10, ui->canvas->height()-10);
-
-        if (drawer != NULL){
-            ui->canvas->scene()->clear();
-           // drawer->scaleToScene();
-            drawer->drawGridLines();
-          //  drawer->drawGraph();
-
-
-
+    if (drawer != NULL){
+        ui->canvas->scene()->clear();
+        drawer->scaleToScene();
+        drawer->drawGridLines();
+        drawer->drawGraph();
     }
 }
 
 void Widget::on_check_clicked()
 {
     QByteArray arr = ui->functionName->text().toAscii();
+    QMessageBox msgBox;
     char *function = arr.data();
     ui->print->setEnabled(true);
     ui->intervalStart->setValidator(new QDoubleValidator());
@@ -45,12 +47,24 @@ void Widget::on_check_clicked()
     ui->intervalEnd->setMaxLength(6);
     double start = ui->intervalStart->text().toDouble();
     double end = ui->intervalEnd->text().toDouble();
+    if (start >= end){
+        msgBox.setText("Wrong diapasone");
+        msgBox.exec();
+        return;
+    }
     QGraphicsScene *scene = ui->canvas->scene();
     if (ui->clearPrevious->isChecked()){
         scene->clear();
     }
     Parser* parser = new Parser();
-    resultVector = parser->tabulate(start, end, scene->width()/2, function);
+    try {
+        resultVector = parser->tabulate(start, end, scene->width()/2, function);
+    }
+    catch (ErrorCodes err) {
+        msgBox.setText("Wrong function: " + ui->functionName->text());
+        msgBox.exec();
+        return;
+    }
     drawer = new FuntionDrawer(&resultVector, scene, start, end);
     drawer->drawGridLines();
     drawer->drawGraph();

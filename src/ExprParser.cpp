@@ -58,7 +58,6 @@ token_value CExprParser::GetToken(char*& fromSymbol, char* pBufer) {
 Operand* CExprParser::expr() {
     Operand* left = term();
     Operand* right = NULL;
-
     for (;;) {
         switch (currentToken) {
         case PLUS:
@@ -133,5 +132,11 @@ Operand* CExprParser::CreateTree(char* exprStr) {
     pCurrentPosition = exprStr;
     currentToken = BEGIN;
     currentToken = GetToken();
-    return treeHead = expr();
+    try {
+        treeHead = expr();
+    }
+    catch (...) {
+        throw WRONGFORMAT;
+    }
+    return treeHead;
 }

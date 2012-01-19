@@ -18,14 +18,13 @@ public:
 
 private slots:
     void on_check_clicked();
-    void resizeEvent(QResizeEvent *event);
+    void on_canvas_resize(QResizeEvent *event);
     void on_print_clicked();
 
 private:
     Ui::Widget *ui;
     FuntionDrawer* drawer;
     vector<point> resultVector;
-    QSize windowSize;
 };
 
 #endif // WIDGET_H

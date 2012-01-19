@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     ExprTree.cpp \
     ExprParser.cpp \
     Drawer.cpp \
-    CTreeBuilder.cpp
+    CTreeBuilder.cpp \
+    graphicscanvas.cpp
 
 HEADERS  += widget.h \
     stdafx.h \
@@ -27,21 +28,7 @@ HEADERS  += widget.h \
     ExprParser.h \
     Drawer.h \
     CTreeBuilder.h \
-    MathFunctionsWrapper.h
+    MathFunctionsWrapper.h \
+    graphicscanvas.h
 
 FORMS    += widget.ui
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

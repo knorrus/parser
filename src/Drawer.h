@@ -21,24 +21,28 @@ protected:
 
     QFont labelFont;
 
-    void addXaxe(double y);
-    void addYaxe(double x);
+    void addXaxe(double y, double step);
+    void addYaxe(double x, double step);
     void addHorizontalLines (double begin, double end, double step, double label);
     void addVerticalLines (double begin, double end, double step, double label);    
 private:
     QGraphicsScene* scene;
+
     vector<point>* result;
+    vector<point>* scaledPoints;
+
     double minY;
     double maxY;
+
     double minX;
     double maxX;
+
     double xLogBase; //log10 of the Y graph diapasone
     double xLogPow;  //10^logBase
     double yLogBase; //log10 of the Y graph diapasone
     double yLogPow;  //10^logBase
 
-    double xLabelCount;
-    double yLabelCount;
+    double lineCount;
 
     double findMax ();
     double findMin();

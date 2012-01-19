@@ -13,7 +13,7 @@
 
 namespace math {
 
-double const eps = 0.05;
+double const eps = 0.1;
 double const pi = 3.14159265;
 
 double abs (double value) {
