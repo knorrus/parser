@@ -40,7 +40,8 @@ void FuntionDrawer::drawGraph(){
     vector<point>::iterator iterator = this->scaledPoints->begin();
     point first = *iterator++, second = *iterator++;
     while(iterator !=  this->scaledPoints->end()){
-        if ((first.type == GRAPHPOINT) && (second.type == GRAPHPOINT)){
+       if ((first.type == GRAPHPOINT) && (second.type == GRAPHPOINT)){
+
             this->scene->addLine(first.first, first.second, second.first, second.second);
         }
         first = second;
@@ -72,6 +73,7 @@ QString FuntionDrawer::stringifyY(double y) {
 
 void FuntionDrawer::addXaxe(double y, double step) {
     QPen axePen(QColor(0, 0, 128), 2);
+    y-=10;
     QPen pen(QColor(205, 92, 92), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     double yStep = (maxY-minY)/lineCount;
     double yCurrent;

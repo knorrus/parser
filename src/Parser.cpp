@@ -27,7 +27,7 @@ vector<point> Parser::tabulate (double start, double end, double dpi, char* func
         throw WRONGFORMAT;
     }
     CalcVisitor* pVisitor = CalcVisitor::Instance();
-    point p;
+    point p;    
     double step = abs(end-start)/dpi;
     for (double i=start; i<end; i+=step) {
         pVisitor->loadParams("x", i);
@@ -60,6 +60,7 @@ vector<point> Parser::tabulate (double start, double end, double dpi, char* func
         }
         catch (...){
             cerr << "Undefined error"<< endl;
+            throw WRONGFORMAT;
         }
     }
     return resultSet;

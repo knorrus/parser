@@ -58,7 +58,7 @@ void Widget::on_check_clicked()
     }
     Parser* parser = new Parser();
     try {
-        resultVector = parser->tabulate(start, end, scene->width()/2, function);
+        resultVector = parser->tabulate(start, end, scene->width(), function);
     }
     catch (ErrorCodes err) {
         msgBox.setText("Wrong function: " + ui->functionName->text());
