@@ -58,7 +58,7 @@ void Widget::on_check_clicked()
     }
     Parser* parser = new Parser();
     try {
-        resultVector = parser->tabulate(start, end, scene->width(), function);
+        resultVector = parser->tabulate(start, end, 300, function);
     }
     catch (ErrorCodes err) {
         msgBox.setText("Wrong function: " + ui->functionName->text());
@@ -69,9 +69,7 @@ void Widget::on_check_clicked()
     drawer->drawGridLines();
     drawer->drawGraph();
     scene->update();
-    ui->authors->setText("authors: Knorr, Boyko");
     delete parser;
-
 }
 
 void Widget::on_print_clicked()

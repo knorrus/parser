@@ -168,28 +168,6 @@
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QLabel" name="authors">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="font">
-        <font>
-         <family>Sans Serif</family>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="toolTip">
-        <string>authors</string>
-       </property>
-       <property name="whatsThis">
-        <string>info</string>
-       </property>
-       <property name="text">
-        <string>authors: Knorr, Boyko</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>

@@ -130,7 +130,9 @@ void CalcVisitor::Visit(BNode* pNode, AResult* pResult) {
         break;
     case DIVD:
     case DIVI:
-        if (abs(right_value.value) < 0.001) throw DIVBYZERO;
+        if (abs(right_value.value) < 0.1){
+            throw DIVBYZERO;
+        }
         left_value.value = left_value.value / right_value.value;
         break;
     }
