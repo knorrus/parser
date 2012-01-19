@@ -37,6 +37,9 @@ private:
     double yLogBase; //log10 of the Y graph diapasone
     double yLogPow;  //10^logBase
 
+    double xLabelCount;
+    double yLabelCount;
+
     double findMax ();
     double findMin();
 

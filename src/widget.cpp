@@ -3,12 +3,14 @@
 #include "string"
 #include <Parser.h>
 #include <Drawer.h>
+#include <QGraphicsScene>
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
     QGraphicsScene *scene = new QGraphicsScene();   
     ui->canvas->setScene(scene);
+    windowSize = QSize(this->width(), this->height());
     drawer = NULL;
 }
 
@@ -20,15 +22,15 @@ Widget::~Widget()
 
 void Widget::resizeEvent(QResizeEvent *event){
     ui->canvas->scene()->setSceneRect(5, 5, ui->canvas->width()-10, ui->canvas->height()-10);
-    windowSize = QSize(this->height(), this->width());
-    if (event->oldSize() == windowSize){
-    if (drawer != NULL){
-        ui->canvas->scene()->clear();
-        drawer->scaleToScene();
-        drawer->drawGridLines();
-        drawer->drawGraph();
-        ui->canvas->update();
-    }    
+
+        if (drawer != NULL){
+            ui->canvas->scene()->clear();
+           // drawer->scaleToScene();
+            drawer->drawGridLines();
+          //  drawer->drawGraph();
+
+
+
     }
 }
 

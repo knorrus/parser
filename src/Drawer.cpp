@@ -15,15 +15,18 @@ FuntionDrawer::FuntionDrawer(vector<point>* result, QGraphicsScene* scene, doubl
     this->minX = start;
     this->maxX = end;
 
-    labelFont = QFont("Helvetica [Cronyx]", 8);
-    labelFont.setStretch(QFont::SemiCondensed);
+    this->labelFont = QFont("Helvetica [Cronyx]", 8);
+    this->labelFont.setStretch(QFont::SemiCondensed);
+
+   this->xLabelCount = scene->width()/25;
+   this->yLabelCount = scene->height()/25;
 
     this->xLogBase = log10(maxX-minX);
-    xLogBase < 0 ? xLogBase = floor(xLogBase)-1 :  xLogBase = ceil(xLogBase);
+    xLogBase < 0 ? xLogBase = floor(xLogBase) :  xLogBase = ceil(xLogBase);
     xLogPow = dAbs(xLogBase);
     xLogPow = round(exp(xLogPow * log(10)));
     this->yLogBase = log10(maxY-minY);
-    yLogBase < 0 ? yLogBase = floor(yLogBase)-1 :  yLogBase = ceil(yLogBase);
+    yLogBase < 0 ? yLogBase = floor(yLogBase) :  yLogBase = ceil(yLogBase);
     yLogPow = dAbs(yLogBase);
     yLogPow = round(exp(yLogPow * log(10)));
     this->scaleToScene();
@@ -56,7 +59,7 @@ QString FuntionDrawer::stringifyY(double y) {
     if (yLogBase > 2){
         y > 0 ? y = round(y) : y = floor(y);
     }
-    y > 0 ? y = round(y*yLogPow)/yLogPow : y = floor(y*yLogPow)/yLogPow;
+    y > 0 ? y = ceil(y*yLogPow)/yLogPow : y = floor(y*yLogPow)/yLogPow;
     ss << y;
     return QString::fromStdString(ss.str());
 }
@@ -83,15 +86,15 @@ void FuntionDrawer::addYaxe(double x) {
 
 void FuntionDrawer::addHorizontalLines(double begin, double end, double step, double label){
     QPen pen(QColor(205, 92, 92), 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-    double yStep = (maxY-minY)/20.0;
+    double yStep = (maxY-minY)/yLabelCount;
     double yCurrent = label;
     for (int i = begin; i<= end; i+=step){
-        this->scene->addLine(0, i, this->scene->width(), i,  pen);
+        this->scene->addLine(20, i, this->scene->width(), i,  pen);
         if (yCurrent - yStep >= minY){
-        //    QGraphicsTextItem *text = scene->addText(stringifyY(yCurrent), labelFont);
-        //    text->setX(0);
-        //    text->setY(i);
-        //    text->setDefaultTextColor(QColor(0, 0, 238));
+            QGraphicsTextItem *text = scene->addText(stringifyY(yCurrent), labelFont);
+            text->setX(0);
+            text->setY(i);
+            text->setDefaultTextColor(QColor(0, 0, 238));
             yCurrent -= yStep;
         }
     }
@@ -99,15 +102,15 @@ void FuntionDrawer::addHorizontalLines(double begin, double end, double step, do
 
 void FuntionDrawer::addVerticalLines(double begin, double end, double step, double label){
     QPen pen(QColor(205, 92, 92), 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-    double xStep = (maxX-minX)/20.0;
+    double xStep = (maxX-minX)/xLabelCount;
     double xCurrent = label;
     for (int i = begin; i<= end; i+=step){
-        this->scene->addLine(i, 0, i, this->scene->height(), pen);
+        this->scene->addLine(i, 0, i, this->scene->height()-20, pen);
         if (xCurrent + xStep <= maxX){
-       //     QGraphicsTextItem *text = scene->addText(stringifyX(xCurrent), labelFont);
-       //     text->setX(i);
-       //     text->setY(scene->height()-20);
-       //     text->setDefaultTextColor(QColor(0, 0, 238));
+            QGraphicsTextItem *text = scene->addText(stringifyX(xCurrent), labelFont);
+            text->setX(i);
+            text->setY(scene->height()-20);
+            text->setDefaultTextColor(QColor(0, 0, 238));
             xCurrent += xStep;
         };
     };
@@ -115,8 +118,9 @@ void FuntionDrawer::addVerticalLines(double begin, double end, double step, doub
 
 void FuntionDrawer::drawGridLines(){   
 
+
         addVerticalLines(0, scene->width(), 25, minX);
-        addHorizontalLines(0,scene->height(), 25, maxY);
+        addHorizontalLines(0,scene->height()-20, 25, maxY);
 
 
 /*    if ((minY*maxY <= 0) && (minX*maxX > 0)){
